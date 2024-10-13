@@ -1,6 +1,9 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config({});
+import connectDB from "./utils/db.js";
 
 const app = express();
 
@@ -15,7 +18,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Routes
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+  connectDB();
   console.log(`Server is running on port ${PORT}`);
 });
