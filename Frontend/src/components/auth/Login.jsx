@@ -19,7 +19,22 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(input);
+
+    try {
+      const res = await axios.post(`${USER_API_ENDPOINT}/login`, input, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        navigate("/");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
   return (
     <>
