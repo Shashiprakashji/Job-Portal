@@ -4,28 +4,37 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "@/utils/constant";
+import { setLoading } from "@/redux/authslice";
+import { useDispatch, useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
-
     password: "",
     role: "",
   });
+  const { loading } = useSelector((store) => store.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    dispatch(setLoading(true));
 
     try {
       const res = await axios.post(`${USER_API_ENDPOINT}/login`, input, {
         headers: {
           "Content-Type": "application/json",
+          withCredentials: true,
         },
-        withCredentials: true,
       });
       if (res.data.success) {
         navigate("/");
@@ -33,7 +42,17 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    } finally {
+      dispatch(setLoading(false));
     }
   };
   return (
@@ -94,9 +113,18 @@ const Login = () => {
                 </div>
               </RadioGroup>
             </div>
-            <Button type="submit" className="w-full my-4">
-              Login
-            </Button>
+
+            {loading ? (
+              <Button className="w-full my-4">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please Wait
+              </Button>
+            ) : (
+              <Button type="submit" className="w-full my-4">
+                Login
+              </Button>
+            )}
+
             <span className="text-sm">
               Don't have an account?
               <Link to="/signup" className="text-blue-600">
