@@ -22,9 +22,9 @@ function HeroSection() {
             <input
               type="text"
               placeholder="Find you job"
-              className="outline-none border-none w-full bg-white"
+              className="outline-none border-none w-full "
             />
-            <Button className="rounded-full bg-[#6a38c2]">
+            <Button className="rounded-full ">
               <Search className="h-5 w-5" />
             </Button>
           </div>
