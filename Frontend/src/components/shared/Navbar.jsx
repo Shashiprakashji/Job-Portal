@@ -5,9 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { User, LogOut } from "lucide-react";
+import store from "@/redux/store";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = false;
+  const { user } = useSelector((store) => store.auth);
   return (
     <>
       <div className="bg-white">
@@ -67,7 +69,9 @@ const Navbar = () => {
                     <div className="flex flex-col my-2 gap-3 text-grey-600">
                       <div className="flex w-fit items-center cursor-pointer">
                         <User />
-                        <Button variant="link">View Profile</Button>
+                        <Button variant="link">
+                          <Link to="/profile">View Profile</Link>
+                        </Button>
                       </div>
                       <div className="flex w-fit items-center gap-2 cursor-pointer">
                         <LogOut />
